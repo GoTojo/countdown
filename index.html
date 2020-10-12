@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>CountDown</title>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="js/jquery.timepicker.js"></script>
+		<link rel="stylesheet" type="text/css" href="js/jquery.timepicker.css" />
+	</head>
+	<body>
+		<div id="settime">
+			<p>
+				time
+				<input id="target" type="text" class="time" />
+			</p>
+			<input type="button" value="Start" onclick="OnButtonClick();"/><br />
+		</div>
+		<div id="countdown">
+			<div id="time">00:00:00</div>
+		</div>
+		<style>
+			#countdown {
+				position: absolute;
+				left: 0; top: 0;
+				width: 100%; height: 100%;
+				background: black;
+				z-index: -1;
+				opacity: 0;
+			}
+			#time {
+				color:white;
+				text-align:center;
+				font-size: 8vw;
+				line-height:100vh;
+			}
+		</style>
+		<script>
+			var targettime;
+			var timer;
+			$(function() {
+				$('#target').timepicker({'timeFormat': 'H:i:s'});
+			});
+			function Update() {
+				function finish() {
+					$('#time').text('');
+					clearInterval(timer);					
+				}
+				let now = new Date().getTime();
+				let resttime = targettime - now;
+				if (resttime <= 0) {
+					finish();
+				} else {
+					let t = resttime;
+					let h = Math.floor(t/(3600000));
+					t -= h*3600000;
+					let m =  Math.floor(t/60000);
+					t -= m*60000;
+					let s =  Math.floor(t/1000);
+					if (h == 0 && m == 0 && s == 0) finish();
+					else $('#time').text(('00'+h).slice(-2)+':'+('00'+m).slice(-2)+':'+('00'+s).slice(-2));
+				}
+			}
+			function OnButtonClick() {
+				$('#countdown').css('z-index', 1);
+				$('#countdown').css('opacity', 1.0);
+				let now = new Date();
+				let datestring = now.getFullYear();
+				datestring += '/'+(now.getMonth()+1);
+				datestring += '/'+now.getDate();
+				datestring += ' '+$('#target').val();
+				console.log(datestring);
+				targettime = new Date(datestring).getTime();
+				if (targettime < now.getTime()) targettime += 24*60*60*1000;
+				console.log('target:'+targettime+',now:'+now.getTime());
+				timer = setInterval(Update, 100);
+			}
+		</script>
+	</body>
+</html>
