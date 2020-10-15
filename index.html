@@ -58,7 +58,7 @@
 					t -= h*3600000;
 					let m =  Math.floor(t/60000);
 					t -= m*60000;
-					let s =  Math.floor(t/1000);
+					let s =  Math.ceil(t/1000);
 					if (h == 0 && m == 0 && s == 0) finish();
 					else $('#time').text(('00'+h).slice(-2)+':'+('00'+m).slice(-2)+':'+('00'+s).slice(-2));
 				}
@@ -71,10 +71,8 @@
 				datestring += '/'+(now.getMonth()+1);
 				datestring += '/'+now.getDate();
 				datestring += ' '+$('#target').val();
-				console.log(datestring);
 				targettime = new Date(datestring).getTime();
 				if (targettime < now.getTime()) targettime += 24*60*60*1000;
-				console.log('target:'+targettime+',now:'+now.getTime());
 				timer = setInterval(Update, 100);
 			}
 		</script>
